@@ -10,7 +10,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,7 +34,6 @@ public class HearthstoneItem extends Item {
 
                     // add a cooldown
                     user.getItemCooldownManager().set(this, 100);
-
                     user.sendMessage(Text.literal("Teleporting!"));
                 }
             } else {
@@ -45,7 +43,6 @@ public class HearthstoneItem extends Item {
                 nbtData.putDouble("hearthstone.y", user.getPos().y);
                 nbtData.putDouble("hearthstone.z", user.getPos().z);
                 user.getStackInHand(hand).setNbt(nbtData);
-
                 user.sendMessage(Text.literal("Location set!"));
             }
         }
@@ -61,19 +58,11 @@ public class HearthstoneItem extends Item {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         if(Screen.hasShiftDown()) {
-            tooltip.add(Text.literal("Shift+Right click to bind location. Right click hold to use.").formatted(Formatting.AQUA));
+            tooltip.add(Text.literal("Shift+Right click to bind location. Right click to TP.").formatted(Formatting.AQUA));
         } else {
             tooltip.add(Text.literal("Press [SHIFT] for more info!").formatted(Formatting.RED));
         }
 
         super.appendTooltip(stack, world, tooltip, context);
-    }
-
-    private void outputRandomNumber(PlayerEntity player) {
-        player.sendMessage(Text.literal("Your Number is " + getRandomNumber()));
-    }
-
-    private int getRandomNumber() {
-        return Random.createLocal().nextInt(10);
     }
 }
