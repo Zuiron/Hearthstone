@@ -6,6 +6,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -33,17 +35,23 @@ public class HearthstoneItem extends Item {
                     user.teleport(x, y, z);
 
                     // add a cooldown
-                    user.getItemCooldownManager().set(this, 100);
-                    user.sendMessage(Text.literal("Teleporting!"));
+                    user.getItemCooldownManager().set(this, 50);
+                    //user.sendMessage(Text.literal("Teleporting!"));
+                    //play sound.
+                    world.playSound(null, user.getBlockPos(), SoundEvents.BLOCK_END_PORTAL_SPAWN, SoundCategory.BLOCKS, 0.4f, 1f);
                 }
             } else {
-                //holding shift, set stone location
-                NbtCompound nbtData = new NbtCompound();
-                nbtData.putDouble("hearthstone.x", user.getPos().x);
-                nbtData.putDouble("hearthstone.y", user.getPos().y);
-                nbtData.putDouble("hearthstone.z", user.getPos().z);
-                user.getStackInHand(hand).setNbt(nbtData);
-                user.sendMessage(Text.literal("Location set!"));
+                //holding shift, set stone location, only if not already set.
+                if(!user.getStackInHand(hand).hasNbt()) {
+                    NbtCompound nbtData = new NbtCompound();
+                    nbtData.putDouble("hearthstone.x", user.getPos().x);
+                    nbtData.putDouble("hearthstone.y", user.getPos().y);
+                    nbtData.putDouble("hearthstone.z", user.getPos().z);
+                    user.getStackInHand(hand).setNbt(nbtData);
+                    user.sendMessage(Text.literal("Location set!"));
+
+                    world.playSound(null, user.getBlockPos(), SoundEvents.AMBIENT_CAVE, SoundCategory.BLOCKS, 1f, 1f);
+                }
             }
         }
 
@@ -51,16 +59,15 @@ public class HearthstoneItem extends Item {
     }
 
     @Override
-    public boolean hasGlint(ItemStack stack) {
-        return stack.hasNbt();
-    }
-
-    @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         if(Screen.hasShiftDown()) {
-            tooltip.add(Text.literal("Shift+Right click to bind location. Right click to TP.").formatted(Formatting.AQUA));
+            tooltip.add(Text.literal("Shift+Right click to bind to current location").formatted(Formatting.AQUA));
         } else {
-            tooltip.add(Text.literal("Press [SHIFT] for more info!").formatted(Formatting.RED));
+            if(stack.hasNbt()) {
+                tooltip.add(Text.literal("BOUND - Use/Right click to TP").formatted(Formatting.DARK_AQUA));
+            } else {
+                tooltip.add(Text.literal("Hold [SHIFT] for more info").formatted(Formatting.RED));
+            }
         }
 
         super.appendTooltip(stack, world, tooltip, context);
