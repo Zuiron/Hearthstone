@@ -1,6 +1,7 @@
 package net.zuiron.hearthstone;
 
 import net.fabricmc.api.ModInitializer;
+import net.zuiron.hearthstone.item.ModItems;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,6 +11,6 @@ public class Hearthstone implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-
+		ModItems.registerModItems();
 	}
 }
