@@ -4,13 +4,13 @@
   "version": "${version}",
 
   "name": "Hearthstone",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "description": "This mod adds an item called \"Hearthstone\" which you can bind to your current location with shift+right click. And then right click / use to teleport to bound location.",
   "authors": [
     "Zuiron"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "",
+    "sources": "https://github.com/Zuiron/Hearthstone"
   },
 
   "license": "MIT",
