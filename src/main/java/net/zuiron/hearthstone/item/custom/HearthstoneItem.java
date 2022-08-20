@@ -24,7 +24,7 @@ public class HearthstoneItem extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if(!world.isClient() && hand == Hand.MAIN_HAND) {
+        if(!world.isClient() && hand == Hand.MAIN_HAND && world.getDimensionKey().getValue().getPath() == "overworld") {
             if(!Screen.hasShiftDown()) {
                 //shift not down, teleport to location. if no location set, output message.
                 if(user.getStackInHand(hand).hasNbt()) {
@@ -36,7 +36,7 @@ public class HearthstoneItem extends Item {
 
                     // add a cooldown
                     user.getItemCooldownManager().set(this, 50);
-                    //user.sendMessage(Text.literal("Teleporting!"));
+                    user.sendMessage(Text.literal("Teleporting!"));
                     //play sound.
                     world.playSound(null, user.getBlockPos(), SoundEvents.BLOCK_END_PORTAL_SPAWN, SoundCategory.BLOCKS, 0.4f, 1f);
                 }
